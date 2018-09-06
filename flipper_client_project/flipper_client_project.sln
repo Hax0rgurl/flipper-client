@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2016
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "flipper_client_project", "flipper_client_project\flipper_client_project.csproj", "{5052BE14-372D-469C-99B8-AE9BA4EED739}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5052BE14-372D-469C-99B8-AE9BA4EED739}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5052BE14-372D-469C-99B8-AE9BA4EED739}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5052BE14-372D-469C-99B8-AE9BA4EED739}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5052BE14-372D-469C-99B8-AE9BA4EED739}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F2787556-1B86-41EF-8956-41F7E9E7604A}
+	EndGlobalSection
+EndGlobal
