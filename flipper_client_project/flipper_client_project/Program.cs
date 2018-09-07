@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+
 
 namespace ConsoleApp1
 {
@@ -17,14 +19,27 @@ namespace ConsoleApp1
     {
         public static bool play(string fileLocation)
         {
-            try
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                System.Diagnostics.Process.Start(@"powershell", $@"-c (New-Object Media.SoundPlayer '{fileLocation}').PlaySync();");
+                Console.WriteLine("I'm on a mac!");
                 return true;
             }
-            catch (Exception err)
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                Console.WriteLine("Failed to play Windows file at [" + fileLocation + "], error:\n" + err);
+                try
+                {
+                    System.Diagnostics.Process.Start(@"powershell", $@"-c (New-Object Media.SoundPlayer '{fileLocation}').PlaySync();");
+                    return true;
+                }
+                catch (Exception err)
+                {
+                    Console.WriteLine("Failed to play Windows file at [" + fileLocation + "], error:\n" + err);
+                    return false;
+                }
+            }
+            else
+            {
+                Console.WriteLine("WARNING: This OS is not recognized. Assuming it is Linux-based.");
                 return false;
             }
         }
