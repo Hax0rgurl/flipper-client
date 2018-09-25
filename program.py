@@ -122,7 +122,32 @@ except Exception as err:
 sine_tone(500,0.1)
 def dec_to_bin(x):
     return int(bin(x)[2:])
-print ()
+	print 
 
 # There is almost no delay here because the sound is so short that the graph is created quickly
 sine_tone(5000,0.1)
+
+
+# From low frequency to below human hearing
+sine_tone(50, 1)
+# Some people won't be able to hear this
+sine_tone(30, 1)
+sine_tone(20, 1)
+# Most people won't be able to hear this
+sine_tone(1, 1)
+sine_tone(0.5, 1)
+sine_tone(0.3, 1)
+sine_tone(0.01, 1)
+
+
+# From normal frequency to beyond human hearing
+sine_tone(400, 1)
+sine_tone(600, 1)
+sine_tone(1000, 1)
+# Most people won't be able to hear this
+sine_tone(18000, 1)
+sine_tone(19000, 1)
+# Pretty much nobody can hear this high, but your pets might get agitated
+sine_tone(20000, 1)
+sine_tone(20500, 1)
+sine_tone(21000, 1)
