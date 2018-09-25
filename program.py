@@ -1,9 +1,16 @@
 import soundcard as sc
 import numpy
-
+import os
+import matplotlib.pyplot as plt
+from scipy.fftpack import fft, ifft
 PI = numpy.pi # 3.14159... (the angle of a circle)
 SAMPLERATE=44100 # A samplerate supported by nearly all devices
-
+VOLUME = 0.5     # range [0.0, 1.0]
+FS = 44100       # sampling rate, Hz, must be integer
+duration = 0.1   # in seconds, may be float
+f = 440.0        # sine frequency, Hz, may be float
+FREQUENCY0 = 500.0 # sine frequency, Hz for 0
+FREQUENCY1 = 5000.0 # sine frequency, Hz for 1
 def sine_tone(frequency, duration=0.1, sample_rate=SAMPLERATE, channels=1):
 	"""
 	Generate a sinewave tone, given:
@@ -20,6 +27,33 @@ def sine_tone(frequency, duration=0.1, sample_rate=SAMPLERATE, channels=1):
 		data.append(sample)
 	
 	default_speaker.play(data/numpy.max(data), samplerate=sample_rate, channels=channels)
+
+
+# This is necessary!
+
+N = 64 # Number of points
+T = 1/64.0 # Spacing between points
+# if T is time/distance, 1/T is frequency/wavenumber
+
+x = numpy.linspace(0, 2*np.pi*N*T, N)
+# Let's take X as time, so 1/X is frequency!
+y1 = numpy.cos(20*x)
+y2 = numpy.sin(10*x)
+y3 = numpy.sin(5*x)
+
+y = y1 + y2 + y3 # Produces a random signal
+
+fy = fft(y) # Finds the FFT
+xf = numpy.linspace(0.0, 1.0/(2.0*T), N/2)
+
+plt.figure(1)
+plt.plot(xf, (2.0/N)*numpy.abs(fy[0:N/2])) 
+# Only half is valid. The other half is replica!
+
+plt.figure(2)
+y4 = ifft(fy) # Gets the inverse FFT
+plt.plot(x, y4, 'r')
+plt.plot(x, y, 'b')
 
 
 print("PLAYBACK DEVICES:")
@@ -79,14 +113,19 @@ except Exception as err:
 
 # You can explicitly set parameters to whatever you want
 # However, if you enter parameters in order, you don't need to set them
-sine_tone(frequency=329.63)
-sine_tone(220.00)
-sine_tone(392.00, duration=0.4)
-sine_tone(392.00, 0.4)
+# if 
+	
+# else
+# 	sine_tone(frequency=FREQUENCY1) int = 1:
+
 # Theres a delay here because of the time it takes to graph the sine wave for 3 seconds
-sine_tone(490, 3)
+sine_tone(500,0.1)
+def dec_to_bin(x):
+    return int(bin(x)[2:])
+	print 
+
 # There is almost no delay here because the sound is so short that the graph is created quickly
-sine_tone(390, 0.1)
+sine_tone(5000,0.1)
 
 
 # From low frequency to below human hearing
