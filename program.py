@@ -1,6 +1,7 @@
 import soundcard as sc
 import numpy
 import os
+import flipper as flpr
 import matplotlib.pyplot as plt
 from scipy.fftpack import fft, ifft
 PI = numpy.pi # 3.14159... (the angle of a circle)
@@ -11,23 +12,6 @@ duration = 0.1   # in seconds, may be float
 f = 440.0        # sine frequency, Hz, may be float
 FREQUENCY0 = 500.0 # sine frequency, Hz for 0
 FREQUENCY1 = 5000.0 # sine frequency, Hz for 1
-def sine_tone(frequency, duration=0.1, sample_rate=SAMPLERATE, channels=1):
-	"""
-	Generate a sinewave tone, given:
-	`frequency` in Hertz (Hz), a measurement of cycles/oscillations per second 
-	`duration` in seconds (can be a decimal), default=0.1 seconds
-	`sample_rate`, the amount of samples per, default=44100
-	`channels`, the amount of audio tracks, such as a left and right channel for stereo playback, default=1 (mono sound)
-	"""
-
-	data = [] # An empty array where we will store points on a graph
-	
-	for i in numpy.arange(sample_rate * duration):
-		sample = numpy.sin((2 * PI * frequency * (i / sample_rate)))
-		data.append(sample)
-	
-	default_speaker.play(data/numpy.max(data), samplerate=sample_rate, channels=channels)
-
 
 sine_tone = FREQUENCY0
 sine_tone = FREQUENCY1
@@ -116,7 +100,7 @@ except Exception as err:
 # if 
 	
 # else
-# 	sine_tone(frequency=FREQUENCY1) int = 1:
+# 	sine_tone(frequency=FREQUENCY1, default_speaker) int = 1:
 
 # Theres a delay here because of the time it takes to graph the sine wave for 3 seconds
 # sine_tone(500,0.1)
