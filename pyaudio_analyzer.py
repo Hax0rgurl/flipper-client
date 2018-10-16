@@ -15,7 +15,7 @@ CHUNK = 1024 * 2             # samples per frame
 FORMAT = pyaudio.paInt16     # audio format (bytes per sample?)
 CHANNELS = 1                 # single channel for microphone
 RATE = 44100                 # samples per second
-5
+
 # create matplotlib figure and axes
 fig, ax = plt.subplots(1, figsize=(15, 7))
 
@@ -44,7 +44,7 @@ ax.set_xlabel('samples')
 ax.set_ylabel('volume')
 ax.set_ylim(0, 255)
 ax.set_xlim(0, 2 * CHUNK)
-plt.setp(ax, xticks=[0, CHUNK, 2 * CHUNK], yticks=[0, 128, 255])
+plt.setp(ax, xticks=[0, CHUNK, 2 * CHUNK], yticks=[0, 50, 100, 150, 200, 250])
 
 # show the plot
 plt.show(block=False)
