@@ -1,23 +1,19 @@
-
 import pyaudio
 import os
 import struct
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.fftpack import fft
 import time
-from tkinter import TclError
-
-# use this backend to display in separate Tk window
-#%matplotlib tk
 
 # constants
 CHUNK = 1024 * 2             # samples per frame
 FORMAT = pyaudio.paInt16     # audio format (bytes per sample?)
 CHANNELS = 1                 # single channel for microphone
-RATE = 44100                 # samples per second
-
+RATE = 44100  # samples per second
+GRAPH_X_MIN = 800
 # create matplotlib figure and axes
-fig, ax = plt.subplots(1, figsize=(15, 7))
+fig, ax2 = plt.subplots()
 
 # pyaudio class instance
 p = pyaudio.PyAudio()
@@ -33,54 +29,39 @@ stream = p.open(
 )
 
 # variable for plotting
-x = np.arange(0, 2 * CHUNK, 2)
+xf = np.linspace(0, RATE, CHUNK)[GRAPH_X_MIN:int(CHUNK/2)]     # frequencies (spectrum)
 
 # create a line object with random data
-line, = ax.plot(x, np.random.rand(CHUNK), '-', lw=2)
+# line, = ax1.plot(x, np.random.rand(CHUNK), '-', lw=2)
 
-# basic formatting for the axes
-ax.set_title('AUDIO WAVEFORM')
-ax.set_xlabel('samples')
-ax.set_ylabel('volume')
-ax.set_ylim(0, 255)
-ax.set_xlim(0, 2 * CHUNK)
-plt.setp(ax, xticks=[0, CHUNK, 2 * CHUNK], yticks=[0, 50, 100, 150, 200, 250])
+# create semilogx line for spectrum
+line_fft, = ax2.plot(xf, np.random.rand(CHUNK)[GRAPH_X_MIN:int(CHUNK/2)], '-', lw=2)
 
-# show the plot
+
+# format waveform axes
+ax2.set_title('Fourier Transform of Microphone Data - PyAudio')
+ax2.set_xlabel('Frequency')
+ax2.set_ylabel('Prevalence of Frequency')
+
 plt.show(block=False)
 
-print('stream started')
-
-# for measuring frame rate
-frame_count = 0
-start_time = time.time()
-
 while True:
-	
+
 	# binary data
-	data = stream.read(CHUNK)  
+	data = stream.read(CHUNK, exception_on_overflow=False)
 	
 	# convert data to integers, make np array, then offset it by 127
 	data_int = struct.unpack(str(2 * CHUNK) + 'B', data)
 	
 	# create np array and offset by 128
-	data_np = np.array(data_int, dtype='b')[::2] + 128
-	
-	line.set_ydata(data_np)
-	
-	# update figure canvas
+	data_np = np.array(data_int, dtype='b') + 128
+
+	# compute FFT and update line
+	yf = fft(data_int)
+	line_fft.set_ydata((np.abs(yf[0:CHUNK]) / (128 * CHUNK))[GRAPH_X_MIN:int(CHUNK/2)])
+
 	try:
 		fig.canvas.draw()
 		fig.canvas.flush_events()
-		frame_count += 1
-		
-	except TclError:
-		
-		# calculate average frame rate
-		frame_rate = frame_count / (time.time() - start_time)
-		
-		print('stream stopped')
-		print('average frame rate = {:.0f} FPS'.format(frame_rate))
-		break
-
-
+	except Exception:
+		exit(0)
