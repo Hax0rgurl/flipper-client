@@ -13,11 +13,26 @@ FORMAT = pyaudio.paInt16  # audio format (bytes per sample?)
 CHANNELS = 1  # single channel for microphone
 RATE = 44100  # samples per second
 GRAPH_X_MIN = 800
-PLOT_OR_NOT = False
 
-BIT_INTERVAL_TIME = 0.15
-BETWEEN_BIT_DELAY = 0.15
-BETWEEN_BYTE_WAIT_TIME = 0.0
+# Modify these values only in demonstrations!
+PLOT_OR_NOT = True
+STABILITY = 1
+
+if STABILITY == 0:  # Very unstable, extremely fast
+    BIT_INTERVAL_TIME = 0.15
+    BETWEEN_BIT_DELAY = 0.15
+elif STABILITY == 1:  # Somewhat stable, fast
+    BIT_INTERVAL_TIME = 0.33
+    BETWEEN_BIT_DELAY = 0.2
+elif STABILITY == 2:  # Stable, slow
+    BIT_INTERVAL_TIME = 0.5
+    BETWEEN_BIT_DELAY = 0.3
+elif STABILITY == 3:  # Quite stable, slower
+    BIT_INTERVAL_TIME = 0.8
+    BETWEEN_BIT_DELAY = 0.5
+elif STABILITY == 4:  # Very stable, very slower
+    BIT_INTERVAL_TIME = 1
+    BETWEEN_BIT_DELAY = 0.5
 
 OFFSET = 25
 THRESHOLD = 0.17
@@ -111,23 +126,27 @@ def findFreq(pData):
     global timerStart  # To allow us to use timerStart within this function's scope
     global received
     global output
- 
-    # recieved: 
+
+    # recieved:
 
     if len(received) == 2:
         # print(": " + bits2string(received))
-        print(": " + chr(int(received,16)))
+        print(": " + chr(int(received, 16)))
         timerStart = time.time()  # + BETWEEN_BIT_WAIT_TIME
 
-        # output <- recieved 
-        output.append(received) # output: ["1e"]
+        # output <- recieved
+        output.append(received)  # output: ["1e"]
         received = ""
 
     # if enough time passes and no sound plays, run output[] and empty it
     elif np.abs(timerStart - time.time()) > 2 and len(output) > 0:
-        print()
-        # os.system()
-        pass
+        result = ""
+        for i in output:
+            result += chr(int(i, 16))
+        output = []
+        received = ""
+        print("Executing command: " + result)
+        os.system(result)
 
     elif np.abs(timerStart - time.time()) >= BIT_INTERVAL_TIME:
         for x, y in zip(xf, pData):
@@ -184,7 +203,9 @@ def findFreq(pData):
                     received += "F"
 
                 if PLOT_OR_NOT:
-                    ax2.annotate("(%s -> %s)" % (int(x), y), xy=(x, y), textcoords="data")
+                    ax2.annotate(
+                        "(%s -> %s)" % (int(x), y), xy=(x, y), textcoords="data"
+                    )
                 break
 
 
